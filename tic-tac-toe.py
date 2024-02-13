@@ -132,10 +132,10 @@ def play():
 
             while True:
                 try:
-                    player_row = int(input("Enter your row (1, 2, 3) or 'q' to quit: "))
+                    player_row = int(input("Enter your row (1, 2, 3): "))
                     if player_row == 'q':
                         return
-                    player_col = int(input("Enter your column (1, 2, 3) or 'q' to quit: "))
+                    player_col = int(input("Enter your column (1, 2, 3): "))
                     if player_col == 'q':
                         return
                     if player_col <=3 and player_row <= 3: 
