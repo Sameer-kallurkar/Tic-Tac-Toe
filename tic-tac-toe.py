@@ -60,6 +60,24 @@ def get_best_move(board, difficulty):
     if difficulty == 'easy':
         return random.choice([(i, j) for i in range(3) for j in range(3) if board[i][j] == ' '])
     elif difficulty == 'medium':
+        if random.random() < 0.7:  # 70% chance of selecting a smart move
+            for i in range(3):
+                for j in range(3):
+                    if board[i][j] == ' ':
+                        board[i][j] = 'X'
+                        if check_winner(board, 'X'):
+                            return i, j
+                        board[i][j] = ' '
+
+            for i in range(3):
+                for j in range(3):
+                    if board[i][j] == ' ':
+                        board[i][j] = 'O'
+                        if check_winner(board, 'O'):
+                            board[i][j] = 'X'
+                            return i, j
+                        board[i][j] = ' '
+
         return random.choice([(i, j) for i in range(3) for j in range(3) if board[i][j] == ' '])
     elif difficulty == 'hard':
         best_val = float('-inf')
@@ -78,92 +96,100 @@ def get_best_move(board, difficulty):
 
         return best_move
 
+
 def play():
-    board = [[' ' for _ in range(3)] for _ in range(3)]
-    
-    f = Figlet(font='slant', width=120)
-    print(f.renderText("Welcome to Tic-Tac-Toe"))
-
     while True:
-        try:
-            sec_diff = int(input("Select difficulty \n1.easy, \n2.medium, \n3.hard: "))
-            if sec_diff <= 3:
-                break
-            else:
-                print("enter a valid option")
-        except (ValueError, TypeError):
-            print("enter a valid option")
-    
-    match sec_diff:
-        case 1:
-            difficulty = "easy"
-        case 2:
-            difficulty = "medium"
-        case 3:
-            difficulty = "hard"
-
-    while difficulty not in ['easy', 'medium', 'hard']:
-        print("Invalid difficulty level. Please choose again.")
-        difficulty = input("Select difficulty (easy, medium, or hard): ").lower()
+        board = [[' ' for _ in range(3)] for _ in range(3)]
         
-    
-
-    while True:
-        print_board(board)
+        f = Figlet(font='slant', width=120)
+        print(f.renderText("Welcome to Tic-Tac-Toe"))
 
         while True:
             try:
-                player_row = int(input("Enter your row (1, 2, 3): "))
-                player_col = int(input("Enter your column (1, 2, 3)): "))
-                if player_col <=3 and player_row <= 3: 
+                sec_diff = int(input("Select difficulty \n1.easy, \n2.medium, \n3.hard: "))
+                if sec_diff in [1, 2, 3]:
                     break
                 else:
-                    print("enter a valid option")
-            except (TypeError, ValueError):
-                print("please select valid option")
+                    print("Enter a valid option")
+            except (ValueError, TypeError):
+                print("Enter a valid option")
             
-        player_row = player_row-1
-        player_col = player_col-1
+        difficulty = ""
+        if sec_diff == 1:
+            difficulty = "easy"
+        elif sec_diff == 2:
+            difficulty = "medium"
+        elif sec_diff == 3:
+            difficulty = "hard"
 
-        if board[player_row][player_col] == ' ':
-            board[player_row][player_col] = 'O'
-        else:
-            print("Invalid move. Try again.")
-            continue
-
-        if check_winner(board, 'O'):
+        while difficulty not in ['easy', 'medium', 'hard']:
+            print("Invalid difficulty level. Please choose again.")
+            difficulty = input("Select difficulty (easy, medium, or hard): ").lower()
+            
+        
+        while True:
             print_board(board)
-            f = Figlet(font='slant', width=120)
-            print(f.renderText("You win! Congratulations! 🎉"))
-            break
 
-        if is_board_full(board):
-            print_board(board)
-            f = Figlet(font='slant', width=120)
-            print(f.renderText("It's a draw!"))
-            break       
+            while True:
+                try:
+                    player_row = int(input("Enter your row (1, 2, 3) or 'q' to quit: "))
+                    if player_row == 'q':
+                        return
+                    player_col = int(input("Enter your column (1, 2, 3) or 'q' to quit: "))
+                    if player_col == 'q':
+                        return
+                    if player_col <=3 and player_row <= 3: 
+                        break
+                    else:
+                        print("Enter a valid option")
+                except (TypeError, ValueError):
+                    print("Please select valid option")
+                
+            player_row = player_row-1
+            player_col = player_col-1
 
-        print("Computer is selecting")
-        print("." , end="")
-        time.sleep(0.5)
-        print("." , end="")
-        time.sleep(0.5)
-        print(".")
-        computer_row, computer_col = get_best_move(board, difficulty)
-        board[computer_row][computer_col] = 'X'
+            if board[player_row][player_col] == ' ':
+                board[player_row][player_col] = 'O'
+            else:
+                print("Invalid move. Try again.")
+                continue
 
-        if check_winner(board, 'X'):
-            print_board(board)
-            f = Figlet(font='slant', width=120)
-            print(f.renderText("Computer wins! Better luck next time."))
-            break
+            if check_winner(board, 'O'):
+                print_board(board)
+                f = Figlet(font='slant', width=120)
+                print(f.renderText("You win! Congratulations! 🎉"))
+                break
 
-        if is_board_full(board):
-            print_board(board)
-            f = Figlet(font='slant', width=120)
-            print(f.renderText("It's a draw!"))
+            if is_board_full(board):
+                print_board(board)
+                f = Figlet(font='slant', width=120)
+                print(f.renderText("It's a draw!"))
+                break       
+
+            print("Computer is selecting")
+            print("." , end="")
+            time.sleep(0.5)
+            print("." , end="")
+            time.sleep(0.5)
+            print(".")
+            computer_row, computer_col = get_best_move(board, difficulty)
+            board[computer_row][computer_col] = 'X'
+
+            if check_winner(board, 'X'):
+                print_board(board)
+                f = Figlet(font='slant', width=120)
+                print(f.renderText("Computer wins! Better luck next time."))
+                break
+
+            if is_board_full(board):
+                print_board(board)
+                f = Figlet(font='slant', width=120)
+                print(f.renderText("It's a draw!"))
+                break
+
+        play_again = input("Would you like to play again? (yes/no): ").lower()
+        if play_again != 'yes':
             break
 
 if __name__ == "__main__":
-        play()
-        
+    play()
