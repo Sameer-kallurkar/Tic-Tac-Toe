@@ -6,7 +6,6 @@ This Python program implements a Tic-Tac-Toe game where the player competes agai
 - Player vs. AI gameplay.
 - AI difficulty levels: easy, medium, and hard.
 - ASCII art rendering for a visually appealing user interface.
-- Ability to quit the game at any time by entering 'q'.
 
 ## How to Play
 1. Run the Python script.
